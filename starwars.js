@@ -1,4 +1,3 @@
-
 var json;
 
 var callbackFilms = function(){
@@ -6,6 +5,7 @@ var callbackFilms = function(){
         if (this.status === 200) {
             json = this.response;
             executa(json);
+            addEvents(json);
         }
         else {
             console.log('Erro na resposta HTTP: ' + this.status);
@@ -19,21 +19,29 @@ filmsRequest.responseType = 'json';
 filmsRequest.open('GET', 'https://swapi.co/api/films/', true);
 filmsRequest.send(null);
 
+var id;
 var executa = function(json){
-
     console.log(json.results);
     for(i=0; i<json.results.length; i++){
         document.getElementById("movies").innerHTML = 
         document.getElementById("movies").innerHTML + 
         '<li id=episode' + json.results[i].episode_id + '>' + 'Episode ' 
         + json.results[i].episode_id + '</li>';
-        document.getElementById("episode"+json.results[i].episode_id).addEventListener('click', alteraDoc("episode"+json.results[i].episode_id));
+        id = json.results[i].episode_id;
+    }
+}
+
+var addEvents = function(json){
+    for (let i = 0; i < json.results.length; i++) {
+        document.getElementById("episode"+json.results[i].episode_id).addEventListener('click', function (){
+            alteraDoc("episode"+json.results[i].episode_id);
+        }); 
     }
 }
 
 var alteraDoc = function(id){
 
-    console.log(json.results[0].opening_crawl);
+    console.log(id);
     switch (id) {
         case 'episode1':
             document.getElementById("conteudo").innerHTML = json.results[0].opening_crawl;
@@ -53,6 +61,8 @@ var alteraDoc = function(id){
         case 'episode6':
             document.getElementById("conteudo").innerHTML = json.results[5].opening_crawl;
             break;
+        case 'episode7':
+            document.getElementById("conteudo").innerHTML = json.results[6].opening_crawl;
+            break;
     }
-
 }
